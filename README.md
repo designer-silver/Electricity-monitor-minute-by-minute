@@ -4,3 +4,4 @@
 electricity consumption using nothing more than the flashing LED on a domestic meter panel display. 
 Potentially more accurate than clip on induction types that do not exclusively measure real power.
 It requires a modern (post2000?) domestic electricity meter with 1/1000th led indicator. 
+see video of testing here https://www.youtube.com/watch?v=fPwpSC74Y1w&t=27s
