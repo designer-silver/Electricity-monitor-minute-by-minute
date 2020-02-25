@@ -1,0 +1,273 @@
+
+Instructions for setting up e2mon WIFI 'Headless' 
+on raspberry pi  -------------- version 1.2 12th Sept 2018
+-----------------------------------------------------------------------------------------------------------
+
+DESCRIPTION:
+
+'e2mon' is a Python3 programme to be run in raspbian stretch or later. It provides a graphical display of 
+electricity consumption using nothing more than the flashing LED on a domestic meter panel display. 
+Potentially more accurate than clip on induction types that do not exclusively measure real power.
+It requires a modern (post2000?) domestic electricity meter with 1/1000th led indicator. 
+
+
+WARNING ABOUT SAFETY:
+
+To use this programme there is no requirement to disturb mains connections BUT mains electricity
+can still be dangerous with the potential to be fatal and existing installations can be faulty.
+Consult a qualified electrician if not certain of the safety of your particular installation - especially old,
+damaged, corroded, faulty or incorrectly modified equipment.
+The advice given here is without warranty or guarantee you are responsible for your own actions.
+
+
+     - ON NO ACCOUNT MODIFY OR DISTURB MAINS VOLTAGE EQUIPMENT UNLESS QUALIFIED TO DO SO-
+
+
+EQUIPMENT NEEDED:
+
+Please note - You will need a PC or a Mac to edit the SD card to get connected to wifi in the first instance.
+After that you can view the monitor on your PC or phone using VNC (free app for Windows,OS and Android).
+This is written for individuals with no knowledge of Python3 or Raspberry Pi but with working knowledge of PC computers.
+
+A good quality micro USB power cable and supply is required for the Raspberry Pi. 
+The 50m to 5 ohm LDR should be connected between pin 1 and 7.
+
+
+
+
+1.GET WIFI CONNECTED:
+
+find the network name (ssid) of your router and the Wireless password
+
+insert the micro SD card from the raspberry pi into your computer using an adapter if required.
+
+ignore any request to format or scan and open folders to view files.
+
+in the boot directory locate file:
+
+wpa_supplicant.conf.txt
+
+ and open it with notepad or similar text editor by selecting OPEN then select notepad
+
+edit the text in the file to include your ssid and password inside the quotes (keep the quotes!)
+
+
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=GB
+
+network={
+
+        ssid="YOUR SSID"
+
+        psk="YOUr PASSWORD"
+
+        key_mgmt=WPA-PSK
+
+}
+
+
+
+now save it WITHOUT .txt extension  i.e. it should now be just
+wpa_supplicant.conf
+  
+beware of hidden .txt extensions added by some editors
+if you suspect .txt has been added select show extensions  [in view make sure you tick file name extensions]
+
+if you are sure all is done correctly
+eject the sd card and insert it into the pi - make sure it is fully inserted! 
+
+note:(if file wpa_supplicant.conf.txt does not exist in the boot directory then it is because it has been booted up before
+so will be necessary to create the file exactly as above)
+
+
+
+2.POWER UP YOUR e2mon:
+
+power up the e2mon by inserting a micro usb charger to one of the micro usb ports
+
+(it will boot up using the file you modified to preset wifi credentials and then it is deleted)
+
+It will now log onto your selected router, if it is in range, within about 60 seconds or so.
+(In the first instance it is best if the e2mon is close to the router to get connected.)
+ On first connection an update may occur which can take up to ten minutes indicated by a flashing green led.
+
+
+3.DOWNLOAD THE VIEWER:
+
+Download and install the (FREE) version of VNC for your computer from https://www.realvnc.com/en/connect/download/vnc/
+launch VNC on your computer'
+enter hostname as:
+
+e2mon.local
+
+and give the e2mon a friendly name such as "mymonitor" press ok
+ignore any security warnings when prompted.
+
+wait for connection via router
+(if you cannot connect try moving the e2mon closer to your wifi and repeat step 1 above checking wifi details carefully)
+
+when prompted:
+enter name 'e2mon'
+and password 'Monitor' (case sensitive)
+
+
+
+the display you will then see is the e2mon graph with power text below it
+Now try turning off the pi by unplugging the power and reconnecting. VNC should reconnect automatically in a few minutes.
+
+
+
+4.TEST the MONITOR:
+
+Fully cover and uncover the LDR sensor to simulate a meter flash to make sure it it working.
+-the power reading should increase from zero - one flash per second is 3600watts - no flash results
+in a reducing power reading updated every 20 seconds until the next flash. The graph is updated every minute. 
+
+
+
+5.ATTACH TO ELECTRICITY METER:
+
+Locate and identify electricity meter power LED marked 1/1000th.  
+If there is more than one led then it should be labelled 1 or real power as opposed to 2 or reactive power. 
+It should be the one that is clearly flashing when electricity is being used!
+
+Secure the LDR by peeling back sticky backing on the velvro strip. 
+IMPORTANT - The ambient light around the meter must not be too bright - the LDR must be completely blacked out before
+it can detect the meter flash. 
+(If sunlight falls on the meter then additional shading will be required).
+
+check the unit is measuring power on each flash by boiling a kettle there should be a steady reading with no dips.
+
+
+
+
+6.USING THE e2mon MONITOR GRAPHICAL INTERFACE:
+
+The user interface is a standard Raspbian GUI.
+
+Details of the past week and month electricity consumption can be found by clicking anywhere on the text in the bottom panel.
+(do not close the graph down with x :if you do then a restart will be required to get the graph back)
+
+A file with a recording of the 5 minute averages and meter readings can be found by clicking the - in the top right corner.
+Double click on the file to see the data saved.
+The data is time stamped and can be copied into spreadsheets for full analysis for the whole year or longer if required.
+
+To restore the display navigate to the bottom right corner click once then click the python3 icon to restore the text screen,
+then navigate to the bottom right corner again and click once then click on e2mon icon to restore the graph on top.
+If you have any problem with restoring the display you can always restart.
+
+
+
+7.CONFIGURING THE MONITOR TIMES AND COST:
+
+ 
+The day rate times are preset from 6.30GMT to 23.30GMT if you need to change them double click on the 
+desktop file e2mon.py it must be opened with python3 programming tool. 
+Edit the times in the user configuration section and save it. In the same way edit the cost of electricity
+and graph settings as required.
+Restart the pi for the changes to take effect.
+
+
+
+
+8.SETTING THE METER TOTALS:
+
+If you want the meter total readings to match your electricity meter FIRST YOU MUST STOP the monitor by clicking on the x 
+in the top left corner and then find the file e2mon.dat on desktop double click to open. Edit it with the text editor 
+(you can turn off word wrap to make it easier to locate the values if required)
+change the values to match the meter readings then save the file. Restart the monitor by removing power.
+
+The meter readings are shown behind the graph along with past totals and costs (these can also be set in the same way).
+ 
+
+Note - A backup file called e2monbak.py file is in the directory if you make a mistake!
+ incorrectly editing the e2mon.dat file will also stop the unit function. A backup called e2monbak.dat is provided.
+
+
+
+
+
+9. CONDITIONS OF USE
+
+In accordance with Pi Foundation principles the programme used here is copyrighted but free to use for non profit
+
+and educational purposes. This is a non profit venture. I have developed it out of interest only in my spare time.
+
+If it produces energy savings it is worth the effort.
+
+Acknowledgements to all the many contributors on github who helped with the graphics and other tricky issues.
+
+I would appreciate any feedback on how it works for you and any improvements bugs etc. you may come across.
+
+
+
+
+Good luck with your energy monitoring and I hope that a graphical display makes it easier to save on energy bills! 
+
+
+
+  
+
+Stuart Guy 
+
+
+
+stuartguy@designer-silver.co.uk
+
+
+
+
+
+ADDITIONAL NOTES and TROUBLESHOOTING:
+
+
+METER FLASH NOT REGISTERING:
+
+Ensure the LDR lines up with the LED and the surrounding velcro seals out the light. 
+Try making the area around the meter darker.
+Test with a torch to see if light is getting in.
+
+
+NOTE ON EXPORTING MICROGENERATION INSTALLATIONS:
+
+I have discovered on my installation that the electric meter LED indicator flashes when exporting electricity! 
+I believe this is quite common.
+This type do not 'count' the export for tarif purposes of course but store the data in a separate (hidden) register
+
+This means that for micro-generation set up for export e2mon will over-read by the exported amount.
+For micro-generation either avoid exporting by using diverters such as SOLIC to heat an immersion (as I have)
+ or have another means to detect exported energy such as an export meter. 
+
+
+                         -end of user instructions- 
+
+developer notes:
+
+d1. to ensure the e2mon program automatically runs on start up
+and disables screen saver
+
+open
+/home/pi/.config/lxsession/LXDE-pi/autostart
+add last line 
+@lxterminal -e python3 /home/pi/e2mon.py
+@xset s 0 0
+@xset s noblank
+@xset s noexpose
+@xet dpms 0 0 0
+
+reverse this if autostart not required
+
+d2. if setting up your own image make sure a full raspbian stretch installed
+
+add modules as required....
+for the display to appear as intended it is necessary
+ to configure lxterminal 
+to monospace bold 25 default window 39x17
+the the window top panel must remain
+ but a new panel to the right should be added
+bottom aligned height 47 width 16 icon size 24 delete all applets except task bar 
+wireless
+
+d3. if a serial port is also to be used for input
+disable serial console to avoid read errors
