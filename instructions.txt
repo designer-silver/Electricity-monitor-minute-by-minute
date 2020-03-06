@@ -109,7 +109,7 @@ wait for connection via router
 
 when prompted:
 enter name 'e2mon'
-and password 'Monitor' (case sensitive)
+and password '*******' (case sensitive)
 
 
 
